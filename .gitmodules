@@ -1,3 +1,0 @@
-[submodule "password-auth-node-mysql"]
-	path = password-auth-node-mysql
-	url = https://github.com/tanerochris/password-auth-node-mysql
