@@ -193,9 +193,10 @@
         <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
         <div class="login">
         <h2 class="active"> sign in </h2>
-        <form>
-            <input type="text" class="text" name="username">
-            <span>username</span>
+        <form id="login-form" novalidate>
+            <span id="errorMessage" style="color: red;"></span>
+            <input type="email" class="text" name="email">
+            <span>email</span>
             <br>
             <br>
             <input type="password" class="text" name="password">
@@ -209,6 +210,36 @@
         </form>
 
         </div>
-        <script src="" async defer></script>
+        <script type="text/javascript" async defer>
+            const onSubmitHandler = async (e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                // extract user data from form
+                const email = e.target.email.value
+                const password = e.target.password.value
+                // submit form
+                const response = await fetch('/users/login',{
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email,
+                        password
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                // on success redirect to login page
+                if (response.status === 200) {
+                    location = '/home'
+                } else {
+                    // if there is an error, print error
+                    const error = await response.text()
+                    document.getElementById('errorMessage').textContent(error)
+                }
+                return false
+            }
+            // onsubmit event listener
+            document.getElementById("login-form").addEventListener('submit', onSubmitHandler)
+        </script>
     </body>
 </html>

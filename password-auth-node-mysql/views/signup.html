@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
         <meta charset="utf-8">
@@ -187,32 +183,59 @@
         </style>
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
         <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
         <div class="login">
         <h2 class="active"> sign up </h2>
-        <form>
+        <form id="signup-form" novalidate>
+            <span id="errorMessage" style="color: red;"></span>
             <input type="text" class="text" name="username">
             <span>username</span>
-            <br>
             <br>
             <input type="email" class="text" name="email">
             <span>email</span>
             <br>
-            <br>
             <input type="password" class="text" name="password">
             <span>password</span>
             <br>
-            <button class="signin">
+            <button class="signin" type="submit">
             Create account
             </button>
             <hr>
-            <a href="/">Sign In</a>
+            <a href="/">Log In</a>
         </form>
-
         </div>
-        <script src="" async defer></script>
+        <script type="text/javascript" async defer>
+            const onSubmitHandler = async (e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                // extract user data from form
+                const username = e.target.username.value
+                const email = e.target.email.value
+                const password = e.target.password.value
+                // submit form
+                const response = await fetch('/users/signup',{
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                // on success redirect to login page
+                if (response.status === 200) {
+                    location = '/'
+                } else {
+                    // if there is an error, print error
+                    const error = await response.text()
+                    document.getElementById('errorMessage').textContent(error)
+                }
+                return false
+            }
+            // onsubmit event listener
+            document.getElementById("signup-form").addEventListener('submit', onSubmitHandler)
+        </script>
     </body>
 </html>
