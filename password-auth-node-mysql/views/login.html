@@ -211,6 +211,9 @@
 
         </div>
         <script type="text/javascript" async defer>
+            if (sessionStorage.getItem('user-data')) {
+                location = '/home'
+            }
             const onSubmitHandler = async (e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -230,6 +233,8 @@
                 })
                 // on success redirect to login page
                 if (response.status === 200) {
+                    const userData = await response.json()
+                    sessionStorage.setItem("user-data", JSON.stringify(userData))
                     location = '/home'
                 } else {
                     // if there is an error, print error
